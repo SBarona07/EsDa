@@ -1,21 +1,21 @@
-public class MyArrayList {
-    private Object[] myArray;
+public class MyArrayList<T> {
+    private T[] myArray;
     private int size;
     private static int default_size = 10;
 
     public MyArrayList() {
-        myArray = new Object[default_size];
+        myArray = (T[]) new Object[default_size];
         size = 0;
     }
 
-    public void add(Object object) {
+    public void add(T object) {
         if (size == myArray.length) {
             increaseSize();
         }
         myArray[size] = object;
         size++;
     }
-    public Object get(int index) {
+    public T get(int index) {
         return myArray[index];
     }
 
