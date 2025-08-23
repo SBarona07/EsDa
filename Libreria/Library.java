@@ -1,4 +1,4 @@
-public class Library<Book> {
+public class Library<T> {
 
     private Book[] books;
     private int size;
@@ -48,6 +48,18 @@ public class Library<Book> {
         }
         return returnString;
     }
+
+/*    public String bookSearch(String title) {
+        String str = "";
+        for (int i = 0; i < books.length; i++) {
+            if(title.equals(titulo){
+                str = "Found";
+            }else{
+                str = "Not Found";
+            }
+        }
+        return str;
+    }*/
 
     private void increaseSize() {
         Book[] newArray = (Book[]) new Object[books.length * 2];
