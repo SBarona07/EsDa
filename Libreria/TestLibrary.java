@@ -26,6 +26,9 @@ public class TestLibrary {
         
         System.out.println(library);
 
+        //Search
+        System.out.println(library.bookSearch("Moreno"));
+
         //clean library
         library.clear();
         System.out.println(library);

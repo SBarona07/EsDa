@@ -1,68 +1,66 @@
-public class Library<T> {
+public class Library<T extends Book> {
 
-    private Book[] books;
+    private T[] books;
     private int size;
     private static final int DEFAULT_SIZE = 10;
 
     public Library() {
-        books = (Book[]) new Object[DEFAULT_SIZE];
+        // no se puede crear new T[], así que toca usar Object[] y castear
+        books = (T[]) new Book[DEFAULT_SIZE];
         size = 0;
     }
 
-    public void add(Book Object) {
+    public void add(T book) {
         if (size == books.length) {
             increaseSize();
         }
-        books[size] = Object;
-        size++;
+        books[size++] = book;
     }
 
-    public void add(int index, Book Object) {
-        books[index] = Object;
+    public void add(int index, T book) {
+        books[index] = book;
     }
 
     public void delete(int index) {
-        for (int i = index; i < books.length; i++) {
-            if (i + 1 != size)
-                books[i] = books[i + 1];
-            else 
-                books[i] = null;
+        for (int i = index; i < size - 1; i++) {
+            books[i] = books[i + 1];
         }
-        size--;
+        books[--size] = null;
     }
 
     public void clear() {
         for (int i = 0; i < books.length; i++) {
             books[i] = null;
         }
+        size = 0;
     }
 
-    public Book getBook(int index) {
+    public T getBook(int index) {
         return books[index];
     }
 
     public String toString() {
-        String returnString = "";
-        for (int i = 0; i < books.length; i++) {
-            returnString += books[i] + " , ";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            sb.append(books[i]).append(", ");
         }
-        return returnString;
+        return sb.toString();
     }
 
-/*    public String bookSearch(String title) {
-        String str = "";
+    // Search by title
+    public String bookSearch(String title) {
+        String str = "Not Found";
         for (int i = 0; i < books.length; i++) {
-            if(title.equals(titulo){
-                str = "Found";
-            }else{
-                str = "Not Found";
+            if (books[i] != null && books[i].getTitle().equalsIgnoreCase(title)) {
+                str = "Found: " + books[i].getTitle();
+                break;
             }
         }
         return str;
-    }*/
+    }
 
     private void increaseSize() {
-        Book[] newArray = (Book[]) new Object[books.length * 2];
+        T[] newArray = (T[]) new Book[books.length * 2];
         for (int i = 0; i < books.length; i++) {
             newArray[i] = books[i];
         }
