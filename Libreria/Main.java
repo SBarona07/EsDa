@@ -8,10 +8,11 @@ public class Main {
         int option;
 
         do {
-            System.out.println("1. Añadir libro");
-            System.out.println("2. Buscar libro");
-            System.out.println("3. Eliminar libro");
-            System.out.println("4. Mostrar libros");
+            System.out.println("1. id ");
+            System.out.println("2. Añadir libro");
+            System.out.println("3. Buscar libro");
+            System.out.println("4. Eliminar libro");
+            System.out.println("5. Mostrar libros");
             System.out.println("0. Salir");
             System.out.print("Elige una opción: ");
             option = scanner.nextInt();
@@ -19,11 +20,13 @@ public class Main {
 
             switch (option) {
                 case 1:
+                    System.out.print("ID: ");
+                    int id = scanner.nextInt();
                     System.out.print("Título: ");
                     String title = scanner.nextLine();
                     System.out.print("Autor: ");
                     String author = scanner.nextLine();
-                    Book book = new Book(title, author);
+                    Book book = new Book(id, title, author );
                     library.add(book);
                     System.out.println("Libro añadido.");
                     break;
