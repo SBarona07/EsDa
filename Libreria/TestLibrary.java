@@ -14,7 +14,7 @@ public class TestLibrary {
         library.add(new Book(9, "Zoraya9", "Catalina"));
         library.add(new Book(10, "soledad10", "Gabriel"));
 
-        library.delete(4);
+        library.delete(0);
 
         System.out.println(library);
 

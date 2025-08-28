@@ -21,12 +21,13 @@ public class Library<T extends Book> {
         books[index] = book;
     }
 
-    public void delete(int index) {
-        for (int i = index; i < size - 1; i++) {
-            books[i] = books[i + 1];
-        }
-        books[--size] = null;
+    public void delete(String index) {
+    int idx = Integer.parseInt(index);
+    for (int i = idx; i < size - 1; i++) {
+        books[i] = books[i + 1];
     }
+    books[--size] = null;
+}
 
     public void clear() {
         for (int i = 0; i < books.length; i++) {
@@ -42,7 +43,7 @@ public class Library<T extends Book> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < size; i++) {
-            sb.append(books[i]).append(", ");
+            sb.append(books[i]).append("\n ");
         }
         return sb.toString();
     }
