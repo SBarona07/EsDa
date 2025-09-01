@@ -1,4 +1,3 @@
-// Clase que representa un libro con id, título y autor
 public class Book {
 
     // Identificador único del libro
@@ -8,29 +7,49 @@ public class Book {
     // Autor del libro
     private String author;
 
-    // Constructor: inicializa los atributos del libro
+    /**
+     * Constructor de la clase Book.
+     * Inicializa los atributos id, title y author con los valores proporcionados.
+     * Permite crear una nueva instancia de libro con información específica.
+     */
     public Book (String id, String title, String author){
         this.id = id;
         this.title = title;
         this.author = author;
     }
 
-    // Devuelve el id del libro
+    /**
+     * Método getId.
+     * Devuelve el identificador único del libro.
+     * Útil para distinguir este libro de otros en la colección.
+     */
     public String getId(){
         return id;
     }
 
-    // Devuelve el título del libro
+    /**
+     * Método getTitle.
+     * Devuelve el título del libro.
+     * Permite acceder al nombre del libro.
+     */
     public String getTitle(){
         return title;
     }
 
-    // Devuelve el autor del libro
+    /**
+     * Método getAuthor.
+     * Devuelve el nombre del autor del libro.
+     * Permite saber quién escribió el libro.
+     */
     public String getAuthor(){
         return author;
     }
 
-    // Devuelve una representación en texto del libro
+    /**
+     * Método toString.
+     * Devuelve una representación en texto del libro.
+     * Útil para mostrar toda la información del libro en una sola línea.
+     */
     public String toString(){
         return "Book [|id: " + id + " |Title: " + title + " |Author: " + author + "]";
     }

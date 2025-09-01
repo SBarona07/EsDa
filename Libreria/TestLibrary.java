@@ -1,33 +1,34 @@
 public class TestLibrary {
     public static void main(String[] args) {
 
-        Library library = new Library();
+        Library<Book> library = new Library<>();
 
-        library.add(new Book(1, "soledad1", "Gabriel"));
-        library.add(new Book(2, "soledad2", "Gabriel"));
-        library.add(new Book(3, "soledad3", "Gabriel"));
-        library.add(new Book(4, "soledad4", "Gabriel"));
-        library.add(new Book(5, "soledad5", "Gabriel"));
-        library.add(new Book(6, "soledad6", "Gabriel"));
-        library.add(new Book(7, "soledad7", "Gabriel"));
-        library.add(new Book(8, "soledad8", "Gabriel"));
-        library.add(new Book(9, "Zoraya9", "Catalina"));
-        library.add(new Book(10, "soledad10", "Gabriel"));
+        library.add(new Book("100", "Perez", "Garcia"));
+        library.add(new Book("101", "Lopez", "Martinez"));
+        library.add(new Book("102", "Gomez", "Sanchez"));
+        library.add(new Book("103", "Moreno", "Barona"));
+        library.add(new Book("104", "Diaz", "Fernandez"));
+        library.add(new Book("105", "Alvarez", "Jimenez"));
+        library.add(new Book("106", "Romero", "Ruiz"));
+        library.add(new Book("107", "Serrano", "Hernandez"));
+        library.add(new Book("108", "Vega", "Navarro"));
+        library.add(new Book("109", "Cruz", "Torres"));
+        library.add(new Book("110", "Ramos", "Dominguez"));
 
-        library.delete(0);
+        library.delete("4");
 
         System.out.println(library);
 
         System.out.println(library.getBook(7));
 
-        library.add(9, new Book(101, "Moreno", "Barona"));
+        library.add(new Book("101", "Moreno", "Barona"));
                   
         System.out.println();
         
         System.out.println(library);
 
         //Search
-        System.out.println(library.bookSearch("Moreno"));
+        System.out.println(library.bookSearch("Perez"));
 
         //clean library
         library.clear();

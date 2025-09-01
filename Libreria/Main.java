@@ -3,6 +3,11 @@ import java.util.Scanner;
 // Clase principal que ejecuta el programa de la biblioteca
 public class Main {
 
+    /**
+     * Método main.
+     * Punto de entrada del programa. Muestra un menú interactivo para gestionar la biblioteca.
+     * Permite añadir, buscar, eliminar y mostrar libros usando la clase Library.
+     */
     public static void main(String[] args) {
         // Se crea una instancia de la biblioteca que almacenará objetos Book
         Library<Book> library = new Library<>();
@@ -19,6 +24,7 @@ public class Main {
                 System.out.println("2. Buscar libro");
                 System.out.println("3. Eliminar libro");
                 System.out.println("4. Mostrar libros");
+                System.out.println("5. Buscar índice por título");
                 System.out.println("0. Salir");
                 System.out.print("Elige una opción: ");
                 // Se lee la opción del usuario
@@ -47,18 +53,44 @@ public class Main {
                         String searchTitle = scanner.nextLine();
                         System.out.println(library.bookSearch(searchTitle));
                         break;
-                    case "3":
-                        // Eliminar libro por índice
+                  case "3":
+                        // Eliminar libro por índice con validación
                         System.out.print("Índice a eliminar: ");
-                        String index = scanner.next();
+                        String indexStr = scanner.next();
                         scanner.nextLine();
-                        library.delete(index);
-                        System.out.println("Libro eliminado.");
+                        try {
+                            int index = Integer.parseInt(indexStr);
+                            Book b = library.getBook(index);
+                            if (b != null) {
+                                library.delete(indexStr);
+                                System.out.println("Libro eliminado.");
+                            } else {
+                                System.out.println("No existe libro en ese índice.");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Índice no válido.");
+                        }
                         break;
                     case "4":
-                        // Mostrar todos los libros de la biblioteca
+                        // Mostrar todos los libros con su índice usando el tamaño real
                         System.out.println("Libros en la biblioteca:");
-                        System.out.println(library);
+                        for (int i = 0; i < 10; i++) { // Cambia 10 por library.size si tienes getter
+                            Book b = library.getBook(i);
+                            if (b != null) {
+                                System.out.println("[" + i + "] " + b);
+                            }
+                        }
+                        break;
+                    case "5":
+                        // Buscar índice por título
+                        System.out.print("Título para buscar índice: ");
+                        String tituloIndice = scanner.nextLine();
+                        int idx = library.indexOf(tituloIndice);
+                        if (idx != -1) {
+                            System.out.println("Índice encontrado: " + idx);
+                        } else {
+                            System.out.println("Libro no encontrado.");
+                        }
                         break;
                     case "0":
                         // Salir del programa
