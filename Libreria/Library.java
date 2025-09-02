@@ -1,93 +1,63 @@
-// Clase genérica que representa una biblioteca de libros
-public class Library<T extends Book> {
+import java.util.ArrayList;
+import java.util.List;
 
-    // Array para almacenar los libros
-    private T[] books;
-    // Número actual de libros en la biblioteca
-    private int size;
-    // Tamaño inicial del array de libros
-    private static final int DEFAULT_SIZE = 10;
+/**
+ * La clase Library representa una biblioteca que almacena una colección de libros.
+ * Permite agregar, obtener, eliminar y buscar libros por título.
+ */
+public class Library {
+    // Lista que almacena los libros de la biblioteca
+    private List<Book> books;
 
     /**
      * Constructor de la clase Library.
-     * Inicializa el array de libros y el tamaño actual.
+     * Inicializa la lista de libros como un ArrayList vacío.
      */
     public Library() {
-        // No se puede crear new T[], así que se usa Book[] y se castea
-        books = (T[]) new Book[DEFAULT_SIZE];
-        size = 0;
+        books = new ArrayList<>();
     }
 
     /**
-     * Método add.
-     * Añade un libro al final del array.
-     * Si el array está lleno, aumenta su tamaño.
+     * Agrega un libro a la biblioteca.
+     * @param book El libro a agregar.
      */
-    public void add(T book) {
-        if (size == books.length) {
-            increaseSize(); // Si está lleno, aumenta el tamaño del array
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    /**
+     * Obtiene el libro en la posición indicada.
+     * @param index Índice del libro a obtener.
+     * @return El libro en la posición dada, o null si el índice es inválido.
+     */
+    public Book getBook(int index) {
+        if (index >= 0 && index < books.size()) {
+            return books.get(index);
         }
-        books[size++] = book;
+        return null;
     }
 
     /**
-     * Método add (sobrecargado).
-     * Añade o reemplaza un libro en una posición específica del array.
+     * Elimina el libro en la posición indicada.
+     * @param index Índice del libro a eliminar.
+     * @return true si el libro fue eliminado, false si el índice es inválido.
      */
-    public void add(int index, T book) {
-        books[index] = book;
-    }
-
-    /**
-     * Método delete.
-     * Elimina un libro por índice (recibido como String).
-     * Desplaza los libros para llenar el hueco y elimina la referencia al último libro.
-     */
-    public void delete(String index) {
-        int idx = Integer.parseInt(index);
-        // Desplaza los libros para llenar el hueco
-        for (int i = idx; i < size - 1; i++) {
-            books[i] = books[i + 1];
+    public boolean deleteBook(int index) {
+        if (index >= 0 && index < books.size()) {
+            books.remove(index);
+            return true;
         }
-        books[--size] = null; // Elimina la referencia al último libro
+        return false;
     }
 
     /**
-     * Método clear.
-     * Elimina todos los libros de la biblioteca.
-     * Deja el array vacío y reinicia el tamaño.
-     */
-    public void clear() {
-        for (int i = 0; i < books.length; i++) {
-            books[i] = null;
-        }
-        size = 0;
-    }
-
-    /**
-     * Método getBook.
-     * Devuelve el libro en la posición indicada del array.
-     */
-    public T getBook(int index) {
-        return books[index];
-    }
-
-    /**
-     * Método getSize.
-     * Devuelve el número actual de libros en la biblioteca.
-     */
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * Método indexOf.
-     * Busca el índice de un libro por su título.
-     * Devuelve el índice si lo encuentra, o -1 si no existe.
+     * Busca el índice de un libro por su título (ignorando mayúsculas/minúsculas).
+     * @param title Título del libro a buscar.
+     * @return El índice del libro si se encuentra, -1 si no existe.
      */
     public int indexOf(String title) {
-        for (int i = 0; i < size; i++) {
-            if (books[i] != null && books[i].getTitle().equalsIgnoreCase(title)) {
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getTitle().equalsIgnoreCase(title)) {
                 return i;
             }
         }
@@ -95,47 +65,18 @@ public class Library<T extends Book> {
     }
 
     /**
-     * Método toString.
-     * Devuelve una representación en texto de todos los libros.
-     * Si no hay libros, indica que no se han agregado.
+     * Devuelve la lista completa de libros en la biblioteca.
+     * @return Lista de libros.
      */
-    public String toString() {
-        if (size == 0) {
-            return "No se han agregado libros.";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            sb.append(books[i]).append("\n ");
-        }
-        return sb.toString();
+    public List<Book> getBooks() {
+        return books;
     }
 
     /**
-     * Método bookSearch.
-     * Busca un libro por título y devuelve el resultado como texto.
-     * Si lo encuentra, indica el título; si no, devuelve "Not Found".
+     * Devuelve la cantidad de libros en la biblioteca.
+     * @return Número de libros almacenados.
      */
-    public String bookSearch(String title) {
-        String str = "Not Found";
-        for (int i = 0; i < books.length; i++) {
-            if (books[i] != null && books[i].getTitle().equalsIgnoreCase(title)) {
-                str = "Found: " + books[i].getTitle();
-                break;
-            }
-        }
-        return str;
-    }
-
-    /**
-     * Método increaseSize.
-     * Aumenta el tamaño del array de libros cuando está lleno.
-     * Copia los libros existentes al nuevo array más grande.
-     */
-    private void increaseSize() {
-        T[] newArray = (T[]) new Book[books.length * 2];
-        for (int i = 0; i < books.length; i++) {
-            newArray[i] = books[i];
-        }
-        books = newArray;
+    public int size() {
+        return books.size();
     }
 }
