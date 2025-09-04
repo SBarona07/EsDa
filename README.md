@@ -25,6 +25,11 @@ Este proyecto implementa una aplicación de consola en Java para gestionar una c
   El código está ampliamente comentado para facilitar su comprensión y mantenimiento.
 
 ---
+## ¿Por qué usamos ArrayList en vez de LinkedList?
+
+Se eligió `ArrayList` sobre `LinkedList` porque en esta aplicación las operaciones más frecuentes son el acceso por índice y la iteración sobre la colección de libros, tareas en las que `ArrayList` es más eficiente gracias a su almacenamiento contiguo en memoria.  
+`LinkedList` sería más adecuado si se realizaran muchas inserciones o eliminaciones en posiciones arbitrarias, pero en nuestro caso, la mayoría de las operaciones son agregar al final y acceder por índice, donde `ArrayList` ofrece mejor rendimiento y menor consumo de memoria.
+
 
 ## Estructura del código
 
