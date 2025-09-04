@@ -42,7 +42,7 @@ public class LibraryUI {
             System.out.println("5. Buscar índice por título");
             System.out.println("0. Salir");
             System.out.print("Elige una opción: ");
-            option = scanner.nextLine(); // Se lee la opción elegida por el usuario.
+            option = scanner.nextLine().trim(); // Se lee la opción elegida por el usuario.
 
             // Procesa la opción seleccionada por el usuario usando switch-case.
             // Permite ejecutar la función correspondiente según la opción.
@@ -147,5 +147,10 @@ public class LibraryUI {
         } else {
             System.out.println("Libro no encontrado."); // Mensaje si no existe.
         }
+    }
+    public static void main(String[] args) {
+        Library library = new Library(); // Se crea una instancia de Library.
+        LibraryUI ui = new LibraryUI(library); // Se crea la interfaz de usuario con la biblioteca.
+        ui.start(); // Se inicia la interfaz de usuario.
     }
 }
