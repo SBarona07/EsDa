@@ -10,8 +10,14 @@ Este proyecto implementa una aplicación de consola en Java para gestionar una c
 
 - **Lenguaje:** Java, por su robustez y facilidad para manejar estructuras de datos.
 - **Estructura de datos:**  
-  Se utiliza `ArrayList` para almacenar los libros, ya que permite acceso rápido por índice y es eficiente para agregar elementos al final.  
+  Se utiliza `ArrayList` para almacenar los libros, ya que permite acceso rápido por índice y es eficiente para agregar elementos al final.
+
+  ## ¿Por qué usamos ArrayList en vez de LinkedList?
+Se eligió `ArrayList` sobre `LinkedList` porque en esta aplicación las operaciones más frecuentes son el acceso por índice y la iteración sobre la colección de libros, tareas en las que `ArrayList` es más eficiente gracias a su almacenamiento contiguo en memoria.  
+`LinkedList` sería más adecuado si se realizaran muchas inserciones o eliminaciones en posiciones arbitrarias, pero en nuestro caso, la mayoría de las operaciones son agregar al final y acceder por índice, donde `ArrayList` ofrece mejor rendimiento y menor consumo de memoria.)  
   La colección se declara como `List<Book>` para facilitar un posible cambio de implementación en el futuro.
+
+
 - **Separación de responsabilidades:**  
   - `Book`: Representa un libro con id, título y autor.
   - `Library`: Gestiona la colección de libros y provee métodos para manipularla.
