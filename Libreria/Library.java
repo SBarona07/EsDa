@@ -43,8 +43,8 @@ public class Library {
 
     /**
      * Elimina el libro en la posición indicada.
-     * @param index Índice del libro a eliminar.
-     * @return true si el libro fue eliminado, false si el índice es inválido.
+     *  index Índice del libro a eliminar.
+     *  true si el libro fue eliminado, false si el índice es inválido.
      * Se verifica el índice antes de eliminar para evitar excepciones.
      */
     public boolean deleteBook(int index) {
@@ -57,8 +57,8 @@ public class Library {
 
     /**
      * Busca el índice de un libro por su título (ignorando mayúsculas/minúsculas).
-     * @param title Título del libro a buscar.
-     * @return El índice del libro si se encuentra, -1 si no existe.
+     *  title Título del libro a buscar.
+     *  El índice del libro si se encuentra, -1 si no existe.
      * Se recorre la lista y se compara el título usando equalsIgnoreCase para mayor flexibilidad.
      */
     public int indexOf(String title) {

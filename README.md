@@ -4,7 +4,7 @@
 
 Este proyecto implementa una aplicación de consola en Java para gestionar una colección de libros, permitiendo agregar, buscar, eliminar y mostrar libros. Está diseñado como ejemplo de uso de estructuras de datos y buenas prácticas de programación orientada a objetos.
 
----
+
 
 ## Decisiones técnicas
 
