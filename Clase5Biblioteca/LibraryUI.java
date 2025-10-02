@@ -83,41 +83,78 @@ public class LibraryUI {
      * @return La opción elegida por el usuario.
      */
     public static String showBookMenu(Scanner input, Library myLibrary){
-        System.out.println("Books Menu");
-        System.out.println("pick an option:");
-        System.out.println("a -> add Books");
-        System.out.println("b -> search Book");
-        System.out.println("c -> list Books");
-        System.out.println("d -> update Book");
-        System.out.println("e -> delete Book");
-        System.out.println("f -> Back");
-        System.out.println("z -> Exit");
-        String opts = "";
-        boolean isValidOption = false;
-        // Ciclo para mantener el menú de libros hasta que el usuario decida volver o salir
-        do {
-            opts = input.nextLine();
-            switch (opts) {
-                case "a":
-                    // Solicita información y agrega un nuevo libro
-                    Book newBook = getBookInformation(input);
-                    myLibrary.addBook(newBook);
-                    break;
-                case "b":
-                case "c":
-                case "d":
-                case "e":
-                case "f":
-                case "z":
-                    // Opciones válidas, no requieren acción adicional aquí
-                    break;
-                default:
-                    System.out.println("Input a valid option");
-                    break;
-            }
-        }while(!opts.equalsIgnoreCase("z") && !opts.equalsIgnoreCase("f"));
-        return opts;
-    }
+    System.out.println("Books Menu");
+    System.out.println("pick an option:");
+    System.out.println("a -> add Books");
+    System.out.println("b -> search Book");
+    System.out.println("c -> list Books");
+    System.out.println("d -> update Book");
+    System.out.println("e -> delete Book");
+    System.out.println("f -> Back");
+    System.out.println("z -> Exit");
+    String opts = "";
+    do {
+        opts = input.nextLine();
+        switch (opts) {
+            case "a":
+                Book newBook = getBookInformation(input);
+                myLibrary.addBook(newBook);
+                System.out.println("Libro agregado correctamente.");
+                break;
+            case "b":
+                System.out.println("Ingrese el ISBN del libro a buscar:");
+                String isbnSearch = input.nextLine();
+                Book foundBook = myLibrary.searchBook(isbnSearch);
+                if (foundBook != null) {
+                    System.out.println("Libro encontrado: " + foundBook.name + " - " + foundBook.author);
+                } else {
+                    System.out.println("Libro no encontrado.");
+                }
+                break;
+            case "c":
+                Book[] books = myLibrary.listBooks();
+                if (books != null && books.length > 0) {
+                    System.out.println("Libros en la biblioteca:");
+                    for (Book b : books) {
+                        System.out.println(b.name + " - " + b.author + " - " + b.isbn + " - " + b.category);
+                    }
+                } else {
+                    System.out.println("No hay libros en la biblioteca.");
+                }
+                break;
+            case "d":
+                System.out.println("Ingrese el ISBN del libro a actualizar:");
+                String isbnUpdate = input.nextLine();
+                Book bookToUpdate = myLibrary.searchBook(isbnUpdate);
+                if (bookToUpdate != null) {
+                    System.out.println("Ingrese los nuevos datos del libro:");
+                    Book updatedBook = getBookInformation(input);
+                    updatedBook.isbn = isbnUpdate; // Mantener el mismo ISBN
+                    myLibrary.updateBook(updatedBook);
+                    System.out.println("Libro actualizado correctamente.");
+                } else {
+                    System.out.println("Libro no encontrado.");
+                }
+                break;
+            case "e":
+                System.out.println("Ingrese el ISBN del libro a eliminar:");
+                String isbnDelete = input.nextLine();
+                myLibrary.deleteBook(isbnDelete);
+                System.out.println("Si el libro existía, fue eliminado.");
+                break;
+            case "f":
+                System.out.println("Volviendo al menú principal...");
+                break;
+            case "z":
+                System.out.println("Saliendo...");
+                break;
+            default:
+                System.out.println("Input a valid option");
+                break;
+        }
+    }while(!opts.equalsIgnoreCase("z") && !opts.equalsIgnoreCase("f"));
+    return opts;
+}
 
     /**
      * Solicita al usuario la información necesaria para crear un nuevo libro.
