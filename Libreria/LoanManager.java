@@ -23,10 +23,14 @@ public class LoanManager {
 
     // Devolver libro
     public boolean returnBook(String bookId, String userId, List<Book> books) {
-        for (Loan loan : loanStack) {
+        Iterator<Loan> it = loanStack.iterator();
+        while (it.hasNext()) {
+            Loan loan = it.next();
             if (loan.getBookId().equals(bookId) && loan.getUserId().equals(userId)) {
                 // Marcar libro como disponible
-                for (Book book : books) {
+                Iterator<Book> itBook = books.iterator();
+                while (itBook.hasNext()) {
+                    Book book = itBook.next();
                     if (book.getId().equals(bookId)) {
                         book.setAvailable(true);
                         // Si hay reservas, prestar al siguiente usuario en la cola
@@ -34,7 +38,7 @@ public class LoanManager {
                         if (cola != null && !cola.isEmpty()) {
                             User nextUser = cola.poll();
                             loanBook(book, nextUser);
-                            System.out.println("Libro reservado entregado automáticamente a: " + nextUser.getName());
+                            System.out.println("Libro reservado entregado automticamente a: " + nextUser.getName());
                         }
                         break;
                     }
@@ -51,7 +55,9 @@ public class LoanManager {
         if (!loanStack.isEmpty()) {
             Loan lastLoan = loanStack.pop();
             // Marcar libro como disponible
-            for (Book book : books) {
+            Iterator<Book> itBook = books.iterator();
+            while (itBook.hasNext()) {
+                Book book = itBook.next();
                 if (book.getId().equals(lastLoan.getBookId())) {
                     book.setAvailable(true);
                     // Si hay reservas, prestar al siguiente usuario en la cola
@@ -65,7 +71,9 @@ public class LoanManager {
                 }
             }
             // Eliminar préstamo del historial del usuario
-            for (User user : users) {
+            Iterator<User> itUser = users.iterator();
+            while (itUser.hasNext()) {
+                User user = itUser.next();
                 if (user.getId().equals(lastLoan.getUserId())) {
                     user.getLoanHistory().remove(lastLoan);
                     break;
@@ -88,6 +96,13 @@ public class LoanManager {
         return false;
     }
 
+    public boolean cancelReservation(Book book, User user) {
+        // Implementa la lógica para cancelar la reserva
+        // Por ejemplo:
+        // return reservations.removeIf(r -> r.getBook().equals(book) && r.getUser().equals(user));
+        return false; // Cambia esto según tu implementación
+    }
+
     public void showAllWithIterator() {
         Iterator<Loan> it = loanStack.iterator();
         while (it.hasNext()) {
@@ -97,8 +112,9 @@ public class LoanManager {
 
     public void report() {
         System.out.println("Reporte de préstamos:");
-        for (Loan loan : loanStack) {
-            System.out.println(loan);
+        Iterator<Loan> it = loanStack.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
         }
     }
 }

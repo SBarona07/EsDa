@@ -4,6 +4,7 @@ public class Library {
     private BookManager bookManager;
     private UserManager userManager;
     private LoanManager loanManager;
+    private Stack<Action> actionHistory = new Stack<>(); // Historial de acciones
 
     public Library() {
         this.bookManager = new BookManager();
@@ -11,9 +12,54 @@ public class Library {
         this.loanManager = new LoanManager();
     }
 
+    // --- Interfaz y clases de acciones ---
+    private interface Action { void undo(); }
+
+    private class AddBookAction implements Action {
+        private Book book;
+        AddBookAction(Book book) { this.book = book; }
+        public void undo() { bookManager.removeBook(book); }
+    }
+
+    private class AddUserAction implements Action {
+        private User user;
+        AddUserAction(User user) { this.user = user; }
+        public void undo() { userManager.removeUser(user); }
+    }
+
+    private class LoanAction implements Action {
+        private Book book;
+        private User user;
+        LoanAction(Book book, User user) { this.book = book; this.user = user; }
+        public void undo() { loanManager.returnBook(book.getId(), user.getId(), bookManager.getAllBooks()); }
+    }
+
+    private class ReturnAction implements Action {
+        private Book book;
+        private User user;
+        ReturnAction(Book book, User user) { this.book = book; this.user = user; }
+        public void undo() { loanManager.loanBook(book, user); }
+    }
+
+    private class ReserveAction implements Action {
+        private Book book;
+        private User user;
+        ReserveAction(Book book, User user) { this.book = book; this.user = user; }
+        public void undo() { loanManager.cancelReservation(book, user); }
+    }
+
     // --- Métodos de Libros ---
     public void addBook(Book book) {
         bookManager.addBook(book);
+        actionHistory.push(new AddBookAction(book));
+    }
+
+    public boolean deleteBook(String id) {
+        Book book = searchBookById(id);
+        if (book != null) {
+            return bookManager.removeBook(book);
+        }
+        return false;
     }
 
     public boolean removeBook(String id) {
@@ -39,6 +85,7 @@ public class Library {
     // --- Métodos de Usuarios ---
     public void registerUser(User user) {
         userManager.addUser(user);
+        actionHistory.push(new AddUserAction(user));
     }
 
     public User searchUserById(String id) {
@@ -54,28 +101,44 @@ public class Library {
         Book book = bookManager.searchById(bookId);
         User user = userManager.searchById(userId);
         if (book != null && user != null) {
-            return loanManager.loanBook(book, user);
+            boolean result = loanManager.loanBook(book, user);
+            if (result) actionHistory.push(new LoanAction(book, user));
+            return result;
         }
         return false;
     }
 
     public boolean returnBook(String bookId, String userId) {
-        return loanManager.returnBook(bookId, userId, bookManager.getAllBooks());
+        Book book = bookManager.searchById(bookId);
+        User user = userManager.searchById(userId);
+        if (book != null && user != null) {
+            boolean result = loanManager.returnBook(bookId, userId, bookManager.getAllBooks());
+            if (result) actionHistory.push(new ReturnAction(book, user));
+            return result;
+        }
+        return false;
     }
 
     public List<Loan> getUserLoanHistory(String userId) {
         return userManager.getLoanHistory(userId);
     }
 
-    public boolean undoLastLoan() {
-        return loanManager.undoLastLoan(bookManager.getAllBooks(), userManager.getAllUsers());
+    // Nuevo método para deshacer la última acción (alta o transacción)
+    public boolean undoLastAction() {
+        if (!actionHistory.isEmpty()) {
+            actionHistory.pop().undo();
+            return true;
+        }
+        return false;
     }
 
     public boolean reserveBook(String bookId, String userId) {
         Book book = bookManager.searchById(bookId);
         User user = userManager.searchById(userId);
         if (book != null && user != null) {
-            return loanManager.reserveBook(book, user);
+            boolean result = loanManager.reserveBook(book, user);
+            if (result) actionHistory.push(new ReserveAction(book, user));
+            return result;
         }
         return false;
     }

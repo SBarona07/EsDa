@@ -17,8 +17,14 @@ public class BookManager {
         return books.removeIf(book -> book.getId().equals(id));
     }
 
+    public boolean removeBook(Book book) {
+        return books.remove(book);
+    }
+
     public Book searchById(String id) {
-        for (Book book : books) {
+        Iterator<Book> it = books.iterator();
+        while (it.hasNext()) {
+            Book book = it.next();
             if (book.getId().equals(id)) return book;
         }
         return null;
@@ -26,7 +32,9 @@ public class BookManager {
 
     public List<Book> searchByTitle(String title) {
         List<Book> result = new ArrayList<>();
-        for (Book book : books) {
+        Iterator<Book> it = books.iterator();
+        while (it.hasNext()) {
+            Book book = it.next();
             if (book.getTitle().toLowerCase().contains(title.toLowerCase())) result.add(book);
         }
         return result;
@@ -34,7 +42,9 @@ public class BookManager {
 
     public List<Book> searchByAuthor(String author) {
         List<Book> result = new ArrayList<>();
-        for (Book book : books) {
+        Iterator<Book> it = books.iterator();
+        while (it.hasNext()) {
+            Book book = it.next();
             if (book.getAuthor().toLowerCase().contains(author.toLowerCase())) result.add(book);
         }
         return result;
@@ -53,8 +63,9 @@ public class BookManager {
 
     public void report() {
         System.out.println("Reporte de libros:");
-        for (Book book : books) {
-            System.out.println(book);
+        Iterator<Book> it = books.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
         }
     }
 }

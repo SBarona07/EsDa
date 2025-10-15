@@ -4,23 +4,13 @@ public class Main {
     public static void main(String[] args) {
         Library library = new Library();
         Scanner scanner = new Scanner(System.in);
-        int option;
-
+        int option = -1;
         do {
-            System.out.println("\n--- SISTEMA DE BIBLIOTECA ---");
-            System.out.println("1. Agregar libro");
-            System.out.println("2. Buscar libro por título");
-            System.out.println("3. Buscar libro por autor");
-            System.out.println("4. Mostrar todos los libros");
-            System.out.println("5. Registrar usuario");
-            System.out.println("6. Mostrar todos los usuarios");
-            System.out.println("7. Prestar libro");
-            System.out.println("8. Devolver libro");
-            System.out.println("9. Deshacer último préstamo");
-            System.out.println("10. Reservar libro (si no está disponible)");
-            System.out.println("11. Reporte de libros");
-            System.out.println("12. Reporte de usuarios");
-            System.out.println("13. Reporte de préstamos");
+            System.out.println("\n--- MENÚ PRINCIPAL ---");
+            System.out.println("1. Gestión de Libros");
+            System.out.println("2. Gestión de Usuarios");
+            System.out.println("3. Gestión de Préstamos");
+            System.out.println("4. Deshacer última acción");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             while (!scanner.hasNextInt()) {
@@ -28,9 +18,54 @@ public class Main {
                 scanner.next();
             }
             option = scanner.nextInt();
-            scanner.nextLine(); // Limpiar buffer
+            scanner.nextLine();
 
             switch (option) {
+                case 1:
+                    menuLibros(scanner, library);
+                    break;
+                case 2:
+                    menuUsuarios(scanner, library);
+                    break;
+                case 3:
+                    menuPrestamos(scanner, library);
+                    break;
+                case 4:
+                    if (library.undoLastAction()) {
+                        System.out.println("Última acción deshecha correctamente.");
+                    } else {
+                        System.out.println("No hay acciones para deshacer.");
+                    }
+                    break;
+                case 0:
+                    System.out.println("¡Hasta luego!");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (option != 0);
+        scanner.close();
+    }
+
+    // Menú de gestión de libros
+    public static void menuLibros(Scanner scanner, Library library) {
+        int opt;
+        do {
+            System.out.println("\n--- GESTIÓN DE LIBROS ---");
+            System.out.println("1. Agregar libro");
+            System.out.println("2. Buscar libro por título");
+            System.out.println("3. Buscar libro por autor");
+            System.out.println("4. Mostrar todos los libros");
+            System.out.println("5. Eliminar libro");
+            System.out.println("0. Volver");
+            System.out.print("Seleccione una opción: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("Por favor, ingrese un número: ");
+                scanner.next();
+            }
+            opt = scanner.nextInt();
+            scanner.nextLine();
+            switch (opt) {
                 case 1:
                     System.out.print("ID del libro: ");
                     String id = scanner.nextLine().trim();
@@ -83,6 +118,40 @@ public class Main {
                     }
                     break;
                 case 5:
+                    System.out.print("ID del libro a eliminar: ");
+                    String deleteBookId = scanner.nextLine().trim();
+                    if (library.deleteBook(deleteBookId)) {
+                        System.out.println("Libro eliminado.");
+                    } else {
+                        System.out.println("No se pudo eliminar el libro. Verifique el ID.");
+                    }
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opt != 0);
+    }
+
+    // Menú de gestión de usuarios
+    public static void menuUsuarios(Scanner scanner, Library library) {
+        int opt;
+        do {
+            System.out.println("\n--- GESTIÓN DE USUARIOS ---");
+            System.out.println("1. Registrar usuario");
+            System.out.println("2. Buscar usuario");
+            System.out.println("3. Mostrar todos los usuarios");
+            System.out.println("0. Volver");
+            System.out.print("Seleccione una opción: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("Por favor, ingrese un número: ");
+                scanner.next();
+            }
+            opt = scanner.nextInt();
+            scanner.nextLine();
+            switch (opt) {
+                case 1:
                     System.out.print("ID del usuario: ");
                     String userId = scanner.nextLine().trim();
                     if (userId.isEmpty()) {
@@ -102,14 +171,50 @@ public class Main {
                     library.registerUser(new User(userId, name));
                     System.out.println("Usuario registrado.");
                     break;
-                case 6:
+                case 2:
+                    System.out.print("ID del usuario a buscar: ");
+                    String searchUserId = scanner.nextLine().trim();
+                    User user = library.searchUserById(searchUserId);
+                    if (user == null) {
+                        System.out.println("No se encontró ningún usuario con ese ID.");
+                    } else {
+                        System.out.println(user);
+                    }
+                    break;
+                case 3:
                     if (library.getAllUsers().isEmpty()) {
                         System.out.println("No hay usuarios registrados.");
                     } else {
                         library.showAllUsersWithIterator();
                     }
                     break;
-                case 7:
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        } while (opt != 0);
+    }
+
+    // Menú de gestión de préstamos
+    public static void menuPrestamos(Scanner scanner, Library library) {
+        int opt;
+        do {
+            System.out.println("\n--- GESTIÓN DE PRÉSTAMOS ---");
+            System.out.println("1. Prestar libro");
+            System.out.println("2. Devolver libro");
+            System.out.println("3. Reservar libro");
+            System.out.println("4. Reporte de préstamos");
+            System.out.println("0. Volver");
+            System.out.print("Seleccione una opción: ");
+            while (!scanner.hasNextInt()) {
+                System.out.print("Por favor, ingrese un número: ");
+                scanner.next();
+            }
+            opt = scanner.nextInt();
+            scanner.nextLine();
+            switch (opt) {
+                case 1:
                     System.out.print("ID del libro a prestar: ");
                     String loanBookId = scanner.nextLine().trim();
                     System.out.print("ID del usuario: ");
@@ -128,7 +233,7 @@ public class Main {
                         System.out.println("No se pudo realizar el préstamo. El libro puede no estar disponible.");
                     }
                     break;
-                case 8:
+                case 2:
                     System.out.print("ID del libro a devolver: ");
                     String returnBookId = scanner.nextLine().trim();
                     System.out.print("ID del usuario: ");
@@ -147,14 +252,7 @@ public class Main {
                         System.out.println("No se pudo devolver el libro. Verifique los datos.");
                     }
                     break;
-                case 9:
-                    if (library.undoLastLoan()) {
-                        System.out.println("Último préstamo deshecho correctamente.");
-                    } else {
-                        System.out.println("No hay préstamos para deshacer.");
-                    }
-                    break;
-                case 10:
+                case 3:
                     System.out.print("ID del libro a reservar: ");
                     String reserveBookId = scanner.nextLine().trim();
                     System.out.print("ID del usuario: ");
@@ -165,23 +263,14 @@ public class Main {
                         System.out.println("No se pudo realizar la reserva. Verifique los datos o el libro está disponible.");
                     }
                     break;
-                case 11:
-                    library.reportBooks();
-                    break;
-                case 12:
-                    library.reportUsers();
-                    break;
-                case 13:
+                case 4:
                     library.reportLoans();
                     break;
                 case 0:
-                    System.out.println("¡Hasta luego!");
                     break;
                 default:
                     System.out.println("Opción inválida.");
             }
-        } while (option != 0);
-
-        scanner.close();
+        } while (opt != 0);
     }
 }

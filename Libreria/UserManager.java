@@ -14,7 +14,9 @@ public class UserManager {
     }
 
     public User searchById(String id) {
-        for (User user : users) {
+        Iterator<User> it = users.iterator();
+        while (it.hasNext()) {
+            User user = it.next();
             if (user.getId().equals(id)) return user;
         }
         return null;
@@ -39,8 +41,13 @@ public class UserManager {
 
     public void report() {
         System.out.println("Reporte de usuarios:");
-        for (User user : users) {
-            System.out.println(user);
+        Iterator<User> it = users.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
         }
+    }
+
+    public boolean removeUser(User user) {
+        return users.remove(user);
     }
 }

@@ -94,4 +94,4 @@ public class EmergencyRoom {
             triage.displayStatus();
         }
     }
-}1
+}
