@@ -1,18 +1,17 @@
-// ...existing code...
-package BibliotecaSimple;
+package BibliotecaM2;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Libro {
+public class Book {
     private String isbn;
     private String title;
     private String author;
-    private String category; // simple category (String)
-    private boolean available; // one-copy model
-    private Queue<String> waitingList; // FIFO reservations by userId
+    private String category; 
+    private boolean available; 
+    private Queue<String> waitingList;
 
-    public Libro(String isbn, String title, String author, String category) {
+    public Book(String isbn, String title, String author, String category) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
@@ -63,7 +62,7 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro [ISBN: " + isbn + " |Title: " + title + " |Author: " + author + " |Category: " + category
-                + " |Available: " + available + "]";
+    return "Libro [ISBN: " + isbn + " |Título: " + title + " |Autor: " + author + " |Categoría: " + category
+        + " |Disponible: " + available + "]";
     }
 }

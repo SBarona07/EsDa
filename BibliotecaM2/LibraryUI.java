@@ -1,4 +1,4 @@
-package BibliotecaSimple;
+package BibliotecaM2;   
 
 import java.util.Scanner;
 import java.util.Stack;
@@ -31,13 +31,8 @@ public class LibraryUI {
                     loansMenu(entrada, lib);
                     break;
                 case "4": {
-                    // ahora undoLast() devuelve un mensaje que mostramos al usuario
-                    String msg = lib.undoLast();
-                    if (msg == null || msg.isEmpty()) {
-                        System.out.println("Operación deshecha.");
-                    } else {
-                        System.out.println(msg);
-                    }
+                    lib.undoLast();
+                    System.out.println("Operación deshecha.");
                     break;
                 }
                 case "0":
@@ -99,12 +94,12 @@ public class LibraryUI {
                     lib.listBooks();
                     break;
                 case "5": {
-                    String q = prompt(entrada, "Título contiene: ");
+                    String q = prompt(entrada, "Título: ");
                     lib.searchByTitle(q);
                     break;
                 }
                 case "6": {
-                    String q = prompt(entrada, "Autor contiene: ");
+                    String q = prompt(entrada, "Autor: ");
                     lib.searchByAuthor(q);
                     break;
                 }
@@ -154,7 +149,7 @@ public class LibraryUI {
                     lib.listUsers();
                     break;
                 case "4": {
-                    String q = prompt(entrada, "Nombre contiene: ");
+                    String q = prompt(entrada, "Nombre: ");
                     lib.searchUserByName(q);
                     break;
                 }

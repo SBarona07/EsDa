@@ -1,0 +1,7 @@
+package BibliotecaM2;
+
+public enum OperationType {
+    ADD_BOOK, UPDATE_BOOK, REMOVE_BOOK,
+    REGISTER_USER, REMOVE_USER,
+    BORROW, RETURN, ENQUEUE_RESERVATION
+}
