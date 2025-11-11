@@ -1,5 +1,7 @@
+import java.util.Scanner;
+
 public class Biblioteca {
-    private Libro[] libros = new Libro[10];
+    
 
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
@@ -20,11 +22,55 @@ public class Biblioteca {
                 System.out.println(biblioteca.libros[i].getTitulo());
             }
         }
+
+        Scanner scanner = new Scanner(System.in);
+
+        // --- preguntar y añadir libros primero ---
+        System.out.print("\n¿Deseas agregar un libro? (s/n): ");
+        String resp = scanner.nextLine().trim();
+        while (resp.equalsIgnoreCase("s") || resp.equalsIgnoreCase("si")) {
+            System.out.print("Título: ");
+            String nuevoTitulo = scanner.nextLine().trim();
+            System.out.print("Autor: ");
+            String nuevoAutor = scanner.nextLine().trim();
+            System.out.print("Año: ");
+            int nuevoAnio = 0;
+            try {
+                nuevoAnio = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Año inválido, se guardará 0.");
+            }
+
+            boolean agregado = biblioteca.addLibro(new Libro(nuevoTitulo, nuevoAutor, nuevoAnio));
+            if (agregado) {
+                System.out.println("Libro agregado correctamente.");
+            } else {
+                System.out.println("No se pudo agregar: la biblioteca está llena.");
+                break;
+            }
+
+            System.out.print("\n¿Deseas agregar otro libro? (s/n): ");
+            resp = scanner.nextLine().trim();
+        }
+
+        // --- luego preguntar por búsqueda ---
+        System.out.print("\nIngrese el título a buscar: ");
+        String titulo = scanner.nextLine().trim();
+
+        Libro encontrado = biblioteca.searchByTitulo(titulo);
+        if (encontrado != null) {
+            System.out.println("Libro encontrado: " + encontrado.getTitulo() +
+                    " — " + encontrado.getAutor() + " (" + encontrado.getAnio() + ")");
+        } else {
+            System.out.println("No se encontró el libro: " + titulo);
+        }
+
+        scanner.close();
     }
 
     public Libro searchByTitulo(String titulo) {
         for (int i = 0; i < libros.length; i++) {
-            if (libros[i] != null && libros[i].getTitulo().equals(titulo)) {
+            if (libros[i] != null && libros[i].getTitulo().equalsIgnoreCase(titulo)) {
                 return libros[i];
             }
         }

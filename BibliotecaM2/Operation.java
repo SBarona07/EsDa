@@ -67,4 +67,24 @@ public class Operation {
         if (c != null && !c.isEmpty()) sb.append(" ").append(c);
         return sb.toString();
     }
+
+    /**
+     * Representa una operación que puede ser registrada en la pila de undo.
+     *
+     * Estructura recomendada:
+     * - OperationType type: tipo de operación (ADD_BOOK, BORROW, RETURN, ...)
+     * - datos necesarios para deshacer: por ejemplo, ISBN, userId, Book snapshot (si es necesario),
+     *   o referencia a objetos antes/después.
+     *
+     * Uso:
+     * - Antes de ejecutar una operación que debe poder deshacerse, Library crea y push() una Operation
+     *   con la información necesaria para revertirla.
+     * - undoLast() en Library hace pop() y ejecuta la lógica inversa según OperationType.
+     *
+     * Consideraciones:
+     * - Para operaciones compuestas (por ejemplo, devolver que provoca auto-prestar), registrar las
+     *   sub-operaciones de forma que el undo sea consistente. Usar suppressRecording para evitar generar
+     *   nuevas entradas al deshacer.
+     * - Mantener Operation lo más pequeño posible, pero con la información suficiente para revertir.
+     */
 }

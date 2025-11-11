@@ -12,7 +12,6 @@ public class Library {
     private ArrayList<Loan> activeLoans = new ArrayList<Loan>();
     private LinkedList<String> operationHistory = new LinkedList<String>();
     private Stack<Operation> undoStack;
-    private boolean suppressRecording = false;
 
     public Library(Stack<Operation> undoStack) {
         this.undoStack = undoStack;
@@ -29,7 +28,7 @@ public class Library {
 
     public void addBook(Book b) {
         books.add(b);
-        if (!suppressRecording && undoStack != null)
+        if (undoStack != null)
             undoStack.push(new Operation(OperationType.REMOVE_BOOK, b.getIsbn(), b.getTitle(),
                     b.getAuthor() + "\t" + b.getCategory()));
     }
@@ -46,7 +45,7 @@ public class Library {
         b.setAuthor(newAuthor);
         b.setCategory(newCategory);
 
-        if (!suppressRecording && undoStack != null)
+        if (undoStack != null)
             undoStack.push(new Operation(OperationType.UPDATE_BOOK, isbn, oldTitle, oldAuthor + "\t" + oldCat));
         return true;
     }
@@ -56,7 +55,7 @@ public class Library {
             Book b = books.get(i);
             if (b.getIsbn().equals(isbn)) {
                 books.remove(i);
-                if (!suppressRecording && undoStack != null)
+                if (undoStack != null)
                     undoStack.push(new Operation(OperationType.ADD_BOOK, isbn, b.getTitle(),
                             b.getAuthor() + "\t" + b.getCategory()));
                 return true;
@@ -105,7 +104,7 @@ public class Library {
 
     public void registerUser(User u) {
         users.add(u);
-        if (!suppressRecording && undoStack != null)
+        if (undoStack != null)
             undoStack.push(new Operation(OperationType.REMOVE_USER, u.getId(), u.getName(), null));
     }
 
@@ -114,7 +113,7 @@ public class Library {
             User u = users.get(i);
             if (u.getId().equals(id)) {
                 users.remove(i);
-                if (!suppressRecording && undoStack != null)
+                if (undoStack != null)
                     undoStack.push(new Operation(OperationType.REGISTER_USER, u.getId(), u.getName(), null));
                 return true;
             }
@@ -145,13 +144,13 @@ public class Library {
             return false;
         }
 
-            if (b.isAvailable()) {
+        if (b.isAvailable()) {
             b.setAvailable(false);
             activeLoans.add(new Loan(userId, isbn));
             u.getLoanHistory().addFirst(isbn);
             operationHistory.addFirst("Prestar " + userId + " -> " + isbn);
 
-            if (!suppressRecording && undoStack != null)
+            if (undoStack != null)
                 undoStack.push(new Operation(OperationType.RETURN, userId, isbn, null));
             System.out.println("Préstamo OK.");
             return true;
@@ -159,7 +158,7 @@ public class Library {
             Queue<String> q = b.getWaitingList();
             q.add(userId);
             operationHistory.addFirst("ENCOLAR_RESERVA " + userId + " " + isbn);
-            if (!suppressRecording && undoStack != null)
+            if (undoStack != null)
                 undoStack.push(new Operation(OperationType.ENQUEUE_RESERVATION, userId, isbn, null));
             System.out.println("Libro ocupado. Añadido a la lista de espera (pos " + q.size() + ").");
             return false;
@@ -181,8 +180,8 @@ public class Library {
         }
 
         activeLoans.remove(idx);
-    operationHistory.addFirst("DEVOLVER " + userId + " <- " + isbn);
-        if (!suppressRecording && undoStack != null)
+        operationHistory.addFirst("DEVOLVER " + userId + " <- " + isbn);
+        if (undoStack != null)
             undoStack.push(new Operation(OperationType.BORROW, userId, isbn, null));
 
         Book b = findBook(isbn);
@@ -221,7 +220,6 @@ public class Library {
         if (undoStack == null || undoStack.isEmpty()) return "Nada que deshacer.";
         Operation op = undoStack.pop();
         try {
-            suppressRecording = true;
             OperationType t = op.getType();
             switch (t) {
                 case REMOVE_BOOK:
@@ -267,11 +265,41 @@ public class Library {
                 default:
                     break;
             }
-            suppressRecording = false;
             return "Operación deshecha: " + op.getDescription();
         } catch (Exception e) {
-            suppressRecording = false;
             return "Error al deshacer: " + e.getMessage();
         }
     }
 }
+
+/**
+ * Library - lógica de dominio de la aplicación BibliotecaM2.
+ *
+ * Responsabilidades principales:
+ * - Mantener colecciones de libros, usuarios, préstamos activos e histórico.
+ * - Operaciones CRUD sobre libros y usuarios.
+ * - Préstamo y devolución de libros, con soporte para waiting list y reasignación automática.
+ * - Registrar operaciones relevantes en la pila de undo (Stack<Operation>) para permitir deshacer.
+ *
+ * Diseño y notas importantes:
+ * - Actualmente se asume almacenamiento en memoria (ArrayList u otras colecciones). Esto es suficiente
+ *   para el prototipo pero no persistente: al reiniciar la aplicación se pierde todo.
+ * - Para mejorar rendimiento de búsqueda, se recomienda añadir índices: Map<String,Book> por ISBN
+ *   y Map<String,User> por ID. En proyectos de mayor escala, usar una base de datos.
+ * - Manejo de undo: Library debe respetar un flag suppressRecording para evitar que las operaciones
+ *   realizadas como efecto de un undo vuelvan a registrarse en la pila (evitar ciclos).
+ * - Concurrencia: la implementación no es thread-safe. Si la app debe soportar múltiples hilos/usuarios,
+ *   sincronizar accesos o migrar a un backend con transacciones.
+ *
+ * Operaciones típicas (implementadas en esta clase):
+ * - addBook, updateBook, removeBook
+ * - registerUser, removeUser
+ * - borrow(uid, isbn), returnBook(uid, isbn)
+ * - listBooks, listUsers, listActiveLoans, printHistory
+ * - searchByTitle/Author/Isbn, searchUserByName
+ * - undoLast: pop de la pila de operaciones y revertir según OperationType
+ *
+ * Recomendaciones para pruebas:
+ * - Unit tests para cada operación básica y para comportamientos compuestos (devolver provoca auto-prestar).
+ * - Tests específicos para undo: deshacer add, borrow y return; también casos compuestos.
+ */

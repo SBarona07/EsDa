@@ -3,10 +3,29 @@ package BibliotecaM2;
 import java.util.Scanner;
 import java.util.Stack;
 
+/**
+ * Interfaz de línea de comandos para la aplicación BibliotecaM2.
+ *
+ * Responsabilidades:
+ * - Mostrar menús y leer entradas del usuario.
+ * - Construir la instancia de Library y pasarle la pila de operaciones para undo.
+ * - Delegar la lógica de dominio (añadir libros, préstamos, usuarios, etc.) a Library.
+ *
+ * Notas de diseño:
+ * - La UI no debe contener lógica de negocio: solo valida entradas mínimas y llama a Library.
+ * - La pila de operaciones (Stack<Operation>) se crea aquí y se inyecta en Library para centralizar
+ *   el control sobre qué operaciones pueden deshacerse.
+ */
 public class LibraryUI {
     public static void main(String[] args) {
+        // Scanner para leer la entrada estándar
         Scanner entrada = new Scanner(System.in);
+
+        // Pila que almacena operaciones para poder deshacer (LIFO).
+        // Se comparte con Library para que ésta registre las operaciones relevantes.
         Stack<Operation> pilaDeshacer = new Stack<Operation>();
+
+        // Instancia de la lógica de la biblioteca; UI solo delega llamadas.
         Library lib = new Library(pilaDeshacer);
 
         boolean enEjecucion = true;
@@ -31,6 +50,7 @@ public class LibraryUI {
                     loansMenu(entrada, lib);
                     break;
                 case "4": {
+                    // Pide a Library que realice el undo de la última operación válida.
                     lib.undoLast();
                     System.out.println("Operación deshecha.");
                     break;
@@ -42,10 +62,15 @@ public class LibraryUI {
                     System.out.println("Opción inválida.");
             }
         }
+        // Cerramos el scanner al terminar la ejecución para liberar recursos.
         entrada.close();
         System.out.println("¡Hasta pronto!");
     }
 
+    /**
+     * Menú de operaciones relacionadas con libros.
+     * Solo formatea interacción con el usuario y delega en Library las operaciones.
+     */
     private static void booksMenu(Scanner entrada, Library lib) {
         boolean volver = false;
         while (!volver) {
@@ -63,15 +88,18 @@ public class LibraryUI {
 
             switch (o) {
                 case "1": {
+                    // Lectura de campos mínimos para crear un libro.
                     String isbn = prompt(entrada, "ISBN: ");
                     String titulo = prompt(entrada, "Título: ");
                     String autor = prompt(entrada, "Autor: ");
                     String categoria = prompt(entrada, "Categoría: ");
+                    // Se delega creación y registro a Library.
                     lib.addBook(new Book(isbn, titulo, autor, categoria));
                     System.out.println("Libro añadido.");
                     break;
                 }
                 case "2": {
+                    // Actualización: la UI pide datos y Library realiza la búsqueda y modificación.
                     String isbn = prompt(entrada, "ISBN a actualizar: ");
                     String titulo = prompt(entrada, "Nuevo título: ");
                     String autor = prompt(entrada, "Nuevo autor: ");
@@ -83,6 +111,7 @@ public class LibraryUI {
                     break;
                 }
                 case "3": {
+                    // Eliminación por ISBN; Library controla existencia y efectos secundarios.
                     String isbn = prompt(entrada, "ISBN a eliminar: ");
                     if (!lib.removeBook(isbn))
                         System.out.println("No encontrado.");
@@ -91,6 +120,7 @@ public class LibraryUI {
                     break;
                 }
                 case "4":
+                    // Listado simple que imprime por consola.
                     lib.listBooks();
                     break;
                 case "5": {
@@ -117,6 +147,10 @@ public class LibraryUI {
         }
     }
 
+    /**
+     * Menú de gestión de usuarios.
+     * La UI valida mínimamente y delega en Library las operaciones sobre usuarios.
+     */
     private static void usersMenu(Scanner entrada, Library lib) {
         boolean volver = false;
         while (!volver) {
@@ -162,6 +196,10 @@ public class LibraryUI {
         }
     }
 
+    /**
+     * Menú de préstamos: prestar, devolver, listar y mostrar historial.
+     * Importante: la lógica de re-asignación al devolver (si hay waitingList) está en Library.
+     */
     private static void loansMenu(Scanner entrada, Library lib) {
         boolean volver = false;
         while (!volver) {
