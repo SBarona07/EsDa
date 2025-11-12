@@ -15,18 +15,18 @@ public class Libreria {
 
     public void agregarLibro(Libro libro) {
         libros.add(libro);
-        System.out.println("Libro agregado: " + libro.getTitulo());
+        System.out.println("- Libro agregado: " + libro.getTitulo());
     }
 
     public void agregarUsuario(Usuario usuario) {
         usuarios.add(usuario);
-        System.out.println("Usuario agregado: " + usuario.getNombre());
+        System.out.println("- Usuario agregado: " + usuario.getNombre());
     }
 
     public void registrarPrestamo(Prestamo prestamo) {
         prestamos.add(prestamo);
         System.out.println(
-                "Préstamo registrado: " + prestamo.getLibro().getTitulo() + " a " + prestamo.getUsuario().getNombre());
+                "- Préstamo registrado: " + prestamo.getLibro().getTitulo() + " a " + prestamo.getUsuario().getNombre());
     }
 
     public ArrayList<Libro> getLibros() {
@@ -68,7 +68,6 @@ public class Libreria {
         return resultado;
     }
 
-    // Nuevo: modificar campos de un libro por id (no reemplaza el objeto)
     public boolean modificarPorId(String id, String nuevoTitulo, String nuevoAutor) {
         Libro l = buscarPorId(id);
         if (l == null)
@@ -80,7 +79,6 @@ public class Libreria {
         return true;
     }
 
-    // Nuevo: eliminar por id
     public boolean eliminarPorId(String id) {
         if (id == null)
             return false;
@@ -96,7 +94,6 @@ public class Libreria {
         return true;
     }
 
-    // Nuevo: buscar usuario por id
     public Usuario buscarUsuarioPorId(String id) {
         if (id == null)
             return null;
@@ -105,5 +102,11 @@ public class Libreria {
                 return u;
         }
         return null;
+    }
+
+    public boolean eliminarUsuarioPorId(String id) {
+        if (id == null)
+            return false;
+        return usuarios.removeIf(u -> id.equals(u.getId()));
     }
 }
