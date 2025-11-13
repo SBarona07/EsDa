@@ -26,6 +26,7 @@ public class Main {
         libreria.agregarLibro(l8);
         libreria.agregarLibro(l9);
         libreria.agregarLibro(l10);
+        libreria.deshacer();
         System.out.println("");
 
         // Crear usuarios
@@ -50,6 +51,7 @@ public class Main {
         libreria.agregarUsuario(u8);
         libreria.agregarUsuario(u9);
         libreria.agregarUsuario(u10);
+        libreria.deshacer();
         System.out.println("");
 
         // Registrar préstamo
@@ -74,6 +76,7 @@ public class Main {
         libreria.registrarPrestamo(p9);
         Prestamo p10 = new Prestamo(l10, u1);
         libreria.registrarPrestamo(p10);
+        libreria.deshacer();
         System.out.println("");
 
         
@@ -104,21 +107,24 @@ public class Main {
         System.out.println("Nombre actual: " + (u3 != null ? u3.getNombre() : "no encontrado"));
 
 
-        System.out.println("\nModificar libro ID = 1:");
-        boolean modificado = libreria.modificarPorId("1", "Spiderman", "Insomniac Games");
+        System.out.println("\nModificar libro ID = 5:");
+        boolean modificado = libreria.modificarLibroPorId("5", "Spiderman", "Insomniac Games");
         System.out.println("Modificado: " + modificado);
-        Libro lib1 = libreria.buscarPorId("1");
+        Libro lib1 = libreria.buscarPorId("5");
         System.out.println("Título actual: " + (lib1 != null ? lib1.getTitulo() : "no encontrado"));
 
 
         System.out.println("\nEliminar libro ID = 3:");
-        boolean eliminado = libreria.eliminarPorId("3");
+        boolean eliminado = libreria.eliminarLibroPorId("3");
         System.out.println("Eliminado: " + eliminado);
+        libreria.deshacer();
 
 
         System.out.println("\nEliminar usuario ID = U4:");
         boolean eliminadoUsuario = libreria.eliminarUsuarioPorId("U4");
         System.out.println("Eliminado: " + eliminadoUsuario);
+        libreria.deshacer();
+        
 
 
         System.out.println("\nUsuarios finales:");

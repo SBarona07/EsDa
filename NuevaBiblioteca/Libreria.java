@@ -1,32 +1,40 @@
 package NuevaBiblioteca;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Libreria {
     private ArrayList<Libro> libros;
     private ArrayList<Usuario> usuarios;
     private ArrayList<Prestamo> prestamos;
+    private Stack<Transaccion> historial;
 
     public Libreria() {
         this.libros = new ArrayList<Libro>();
         this.usuarios = new ArrayList<Usuario>();
         this.prestamos = new ArrayList<Prestamo>();
+        this.historial = new Stack<Transaccion>();
     }
 
     public void agregarLibro(Libro libro) {
         libros.add(libro);
+        historial.push(new Transaccion("libro", libro));
         System.out.println("- Libro agregado: " + libro.getTitulo());
+
     }
 
     public void agregarUsuario(Usuario usuario) {
         usuarios.add(usuario);
+        historial.push(new Transaccion("usuario", usuario));
         System.out.println("- Usuario agregado: " + usuario.getNombre());
     }
 
     public void registrarPrestamo(Prestamo prestamo) {
         prestamos.add(prestamo);
+        historial.push(new Transaccion("prestamo", prestamo));
         System.out.println(
-                "- Préstamo registrado: " + prestamo.getLibro().getTitulo() + " a " + prestamo.getUsuario().getNombre());
+                "- Préstamo registrado: " + prestamo.getLibro().getTitulo() + " a "
+                        + prestamo.getUsuario().getNombre());
     }
 
     public ArrayList<Libro> getLibros() {
@@ -68,7 +76,7 @@ public class Libreria {
         return resultado;
     }
 
-    public boolean modificarPorId(String id, String nuevoTitulo, String nuevoAutor) {
+    public boolean modificarLibroPorId(String id, String nuevoTitulo, String nuevoAutor) {
         Libro l = buscarPorId(id);
         if (l == null)
             return false;
@@ -79,9 +87,10 @@ public class Libreria {
         return true;
     }
 
-    public boolean eliminarPorId(String id) {
+    public boolean eliminarLibroPorId(String id) {
         if (id == null)
             return false;
+        historial.push(new Transaccion("eliminar_libro", buscarPorId(id)));
         return libros.removeIf(l -> id.equals(l.getId()));
     }
 
@@ -107,6 +116,47 @@ public class Libreria {
     public boolean eliminarUsuarioPorId(String id) {
         if (id == null)
             return false;
+        historial.push(new Transaccion("eliminar_usuario", buscarUsuarioPorId(id)));
         return usuarios.removeIf(u -> id.equals(u.getId()));
+    }
+
+    public void deshacer() {
+        if (historial.isEmpty()) {
+            System.out.println("- No hay transacciones para deshacer");
+            return;
+        }
+
+        Transaccion t = historial.pop();
+        switch (t.getTipo()) {
+            case "libro":
+                Libro libro = (Libro) t.getObjeto();
+                libros.remove(libro);
+                System.out.println("- Deshacer: Libro eliminado: " + libro.getTitulo());
+                break;
+            case "usuario":
+                Usuario usuario = (Usuario) t.getObjeto();
+                usuarios.remove(usuario);
+                System.out.println("- Deshacer: Usuario eliminado: " + usuario.getNombre());
+                break;
+            case "prestamo":
+                Prestamo prestamo = (Prestamo) t.getObjeto();
+                prestamos.remove(prestamo);
+                System.out.println("- Deshacer: Préstamo eliminado: " + prestamo.getLibro().getTitulo() + " a "
+                        + prestamo.getUsuario().getNombre());
+                break;
+            case "eliminar_libro":
+                Libro libroEliminado = (Libro) t.getObjeto();
+                libros.add(libroEliminado);
+                System.out.println("- Deshacer: Libro restaurado: " + libroEliminado.getTitulo());
+                break;
+            case "eliminar_usuario":
+                Usuario usuarioEliminado = (Usuario) t.getObjeto();
+                usuarios.add(usuarioEliminado);
+                System.out.println("- Deshacer: Usuario restaurado: " + usuarioEliminado.getNombre());
+                break;
+
+            default:
+                break;
+        }
     }
 }
