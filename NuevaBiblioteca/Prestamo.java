@@ -4,7 +4,7 @@ public class Prestamo {
     private Libro libro;
     private Usuario usuario;
 
-    public Prestamo(Libro libro, Usuario usuario) {
+    public Prestamo(Libro libro, Usuario usuario ) {
         this.libro = libro;
         this.usuario = usuario;
     }
@@ -16,5 +16,6 @@ public class Prestamo {
     public Usuario getUsuario() {
         return usuario;
     }
+
 
 }

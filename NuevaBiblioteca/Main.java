@@ -105,6 +105,7 @@ public class Main {
         System.out.println("Modificado: " + modUsuario);
         u3 = libreria.buscarUsuarioPorId("U3");
         System.out.println("Nombre actual: " + (u3 != null ? u3.getNombre() : "no encontrado"));
+        libreria.deshacer();
 
 
         System.out.println("\nModificar libro ID = 5:");
@@ -112,6 +113,7 @@ public class Main {
         System.out.println("Modificado: " + modificado);
         Libro lib1 = libreria.buscarPorId("5");
         System.out.println("Título actual: " + (lib1 != null ? lib1.getTitulo() : "no encontrado"));
+        libreria.deshacer();
 
 
         System.out.println("\nEliminar libro ID = 3:");

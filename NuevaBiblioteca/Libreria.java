@@ -12,8 +12,8 @@ public class Libreria {
     public Libreria() {
         this.libros = new ArrayList<Libro>();
         this.usuarios = new ArrayList<Usuario>();
-        this.prestamos = new ArrayList<Prestamo>();
-        this.historial = new Stack<Transaccion>();
+        this.prestamos = new ArrayList<Prestamo>(); //
+        this.historial = new Stack<Transaccion>(); 
     }
 
     public void agregarLibro(Libro libro) {
@@ -80,6 +80,8 @@ public class Libreria {
         Libro l = buscarPorId(id);
         if (l == null)
             return false;
+        Libro estadoAnterior = new Libro(l.getId(), l.getTitulo(), l.getAutor());
+        historial.push(new Transaccion("Modificar libro", estadoAnterior));
         if (nuevoTitulo != null)
             l.setTitulo(nuevoTitulo);
         if (nuevoAutor != null)
@@ -98,6 +100,8 @@ public class Libreria {
         Usuario u = buscarUsuarioPorId(id);
         if (u == null)
             return false;
+        Usuario estadoAnterior = new Usuario(u.getId(), u.getNombre());
+        historial.push(new Transaccion("Modificar usuario", estadoAnterior));
         if (nuevoNombre != null)
             u.setNombre(nuevoNombre);
         return true;
@@ -153,6 +157,23 @@ public class Libreria {
                 Usuario usuarioEliminado = (Usuario) t.getObjeto();
                 usuarios.add(usuarioEliminado);
                 System.out.println("- Deshacer: Usuario restaurado: " + usuarioEliminado.getNombre());
+                break;
+            case "Modificar libro":
+                Libro estadoAnteriorLibro = (Libro) t.getObjeto();
+                Libro libroActual = buscarPorId(estadoAnteriorLibro.getId());
+                if (libroActual != null) {
+                    libroActual.setTitulo(estadoAnteriorLibro.getTitulo());
+                    libroActual.setAutor(estadoAnteriorLibro.getAutor());
+                    System.out.println("- Deshacer: Modificación de libro revertida: " + libroActual.getTitulo());
+                }
+                break;
+            case "Modificar usuario":
+                Usuario estadoAnteriorUsuario = (Usuario) t.getObjeto();
+                Usuario usuarioActual = buscarUsuarioPorId(estadoAnteriorUsuario.getId());
+                if (usuarioActual != null) {
+                    usuarioActual.setNombre(estadoAnteriorUsuario.getNombre());
+                    System.out.println("- Deshacer: Modificación de usuario revertida: " + usuarioActual.getNombre());
+                }
                 break;
 
             default:
