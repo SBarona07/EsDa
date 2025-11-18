@@ -90,8 +90,9 @@ public class Main {
             System.out.println("- " + l.getId() + ": " + l.getTitulo() + " — " + l.getAutor());
         }
 
-        System.out.println("\nBuscar libro por título 'Zelda':");
-        for (Libro l : libreria.buscarPorTitulo("Zelda")) {
+
+        System.out.println("\nBuscar libro por título 'ZELDA':");
+        for (Libro l : libreria.buscarPorTitulo("ZELDA")) {
             System.out.println("- " + l.getId() + ": " + l.getTitulo());
         }
 
@@ -133,6 +134,7 @@ public class Main {
         for (Usuario u : libreria.getUsuarios()) {
             System.out.println("- " + u.getId() + ": " + u.getNombre());
         }
+
 
         System.out.println("\nLibros finales:");
         for (Libro l : libreria.getLibros()) {

@@ -12,7 +12,7 @@ public class Libreria {
     public Libreria() {
         this.libros = new ArrayList<Libro>();
         this.usuarios = new ArrayList<Usuario>();
-        this.prestamos = new ArrayList<Prestamo>(); //
+        this.prestamos = new ArrayList<Prestamo>();
         this.historial = new Stack<Transaccion>(); 
     }
 
@@ -101,7 +101,7 @@ public class Libreria {
         if (u == null)
             return false;
         Usuario estadoAnterior = new Usuario(u.getId(), u.getNombre());
-        historial.push(new Transaccion("Modificar usuario", estadoAnterior));
+        historial.push( new Transaccion("Modificar usuario", estadoAnterior));
         if (nuevoNombre != null)
             u.setNombre(nuevoNombre);
         return true;
